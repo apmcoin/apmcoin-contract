@@ -319,10 +319,10 @@ contract ERC20 is IERC20 {
 
 }
 
-contract Dacoin is ERC20, Ownable{
+contract Apmcoin is ERC20, Ownable{
 
-    string public constant name = "Dacoin";
-    string public constant symbol = "DA";
+    string public constant name = "APM Coin";
+    string public constant symbol = "APM";
     uint8 public constant decimals = 18;
 
     event ClaimedTokens(address indexed owner, address indexed _token, uint256 claimedBalance);
