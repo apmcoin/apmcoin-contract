@@ -319,7 +319,39 @@ contract ERC20 is IERC20 {
 
 }
 
-contract Apmcoin is ERC20, Ownable{
+contract Pausable is Ownable{
+    event Paused();
+    event Unpaused();
+
+    bool private _paused;
+
+    function paused() public view returns (bool) {
+        return _paused;
+    }
+
+    modifier whenNotPaused() {
+       require(!_paused);
+       _;
+   }
+
+   modifier whenPaused() {
+       require(_paused);
+       _;
+   }
+
+   function pause() public onlyOwner whenNotPaused {
+        _paused = true;
+        emit Paused();
+    }
+
+    function unpause() public onlyOwner whenPaused {
+        _paused = false;
+        emit Unpaused();
+    }
+
+}
+
+contract Apmcoin is ERC20, Ownable, Pausable{
 
     string public constant name = "APM Coin";
     string public constant symbol = "APM";
@@ -336,8 +368,8 @@ contract Apmcoin is ERC20, Ownable{
         _mint(msg.sender, _initialBalance);
     }
 
-    function _transfer(address from, address to, uint256 value) internal {
-        require(!isBlacklist(from));
+    function _transfer(address from, address to, uint256 value) whenNotPaused internal {
+        require(!isBlacklist(from) && !isBlacklist(to));
         return super._transfer(from, to, value);
     }
 
